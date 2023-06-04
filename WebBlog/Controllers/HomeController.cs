@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebBlog.Models;
+using WebBlog.Models.ViewModels;
 
 namespace WebBlog.Controllers
 {

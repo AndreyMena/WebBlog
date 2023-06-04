@@ -12,13 +12,19 @@ namespace WebBlog.Controllers
         {
             userManager = _userManager;
         }
-        public IActionResult Index()
+        public IActionResult AdminView()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult CreateUser()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> createUser(UserViewModel model)
+        public async Task<IActionResult> CreateUser(UserViewModel model)
         {
             if (ModelState.IsValid) 
             {
