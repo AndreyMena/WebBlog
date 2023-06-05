@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WebBlog.Data.Migrations
+namespace WebBlog.Migrations
 {
-    public partial class PostsCreate : Migration
+    public partial class context : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
