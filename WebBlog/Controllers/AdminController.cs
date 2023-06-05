@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Collections.Generic;
 using WebBlog.Models;
 using WebBlog.Models.ViewModels;
@@ -8,10 +9,10 @@ namespace WebBlog.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<AppUser> userManager;
 
         private readonly RoleManager<IdentityRole> roleManager;
-        public AdminController(UserManager<IdentityUser> _userManager,
+        public AdminController(UserManager<AppUser> _userManager,
             RoleManager<IdentityRole> _roleManager)
         {
             userManager = _userManager;
@@ -24,11 +25,11 @@ namespace WebBlog.Controllers
             var roles = roleManager.Roles;
             var users = userManager.Users;
 
-            List<Tuple<IdentityUser, IList<string>>> modelUsersAndRoles =  new List<Tuple<IdentityUser, IList<string>>>();
-            //Tuple<IdentityUser, List<IdentityRole>> ModelUsersAndRoles;
+            List<Tuple<AppUser, IList<string>>> modelUsersAndRoles =  new List<Tuple<AppUser, IList<string>>>();
+            //Tuple<AppUser, List<IdentityRole>> ModelUsersAndRoles;
             foreach (var item in users) {
                 var u = await userManager.GetRolesAsync(item);
-                modelUsersAndRoles.Add(new Tuple<IdentityUser, IList<string>>(item, u));
+                modelUsersAndRoles.Add(new Tuple<AppUser, IList<string>>(item, u));
             }
             AdminViewModel adminViewModel = new AdminViewModel()
             { ModelRoles = roles.ToList(), ModelUsers = users.ToList(), ModelUsersAndRoles = modelUsersAndRoles };
@@ -46,7 +47,7 @@ namespace WebBlog.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+                var user = new AppUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) 
                 {

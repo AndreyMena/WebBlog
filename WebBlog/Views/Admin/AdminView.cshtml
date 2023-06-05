@@ -7,37 +7,16 @@
 <h1>Admin View</h1>
 
 <a class="btn btn-primary" href="/Admin/CreateUser">Add users</a>
-<br/>
-<br/>
-<h3>Lista de roles</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.ModelRoles)
-    {
-        <tr>
-            <td>@item.Id</td>
-            <td>@item.Name</td>
-        </tr>
-    }
-    </tbody>
-</table>
-
 <br />
 <br />
-<h3>Lista de usuarios</h3>
+<h3>Lista de usuarios y roles</h3>
 <table class="table">
     <thead>
         <tr>
             <th>Email</th>
             <th>Role</th>
-            <th></th>
+            <th>Editar</th>
+            <th>Borrar</th>
         </tr>
     </thead>
     <tbody>

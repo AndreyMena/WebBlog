@@ -6,8 +6,8 @@ namespace WebBlog.Models.ViewModels
     {
         public List<IdentityRole>? ModelRoles { get; set; }
 
-        public List<IdentityUser>? ModelUsers { get; set; }
+        public List<AppUser>? ModelUsers { get; set; }
 
-        public List<Tuple<IdentityUser, IList<string>>>? ModelUsersAndRoles { get; set; }
+        public List<Tuple<AppUser, IList<string>>>? ModelUsersAndRoles { get; set; }
     }
 }
