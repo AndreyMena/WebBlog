@@ -1,9 +1,57 @@
-﻿@{
-    ViewData["Title"] = "AdminView";
+﻿@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Admin View";
 }
+@model AdminViewModel
 
-<h1>AdminView</h1>
+<h1>Admin View</h1>
 
-<li class="nav-item">
-        <a class="nav-link text-dark" href="/Admin/CreateUser">Add users</a>
-</li>
+<a class="btn btn-primary" href="/Admin/CreateUser">Add users</a>
+<br/>
+<br/>
+<h3>Lista de roles</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ModelRoles)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<br />
+<br />
+<h3>Lista de usuarios</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ModelUsersAndRoles)
+        {
+            <tr>
+                <td>@item.Item1.Email</td>
+                <td>
+                    @foreach (var itemRole in item.Item2)
+                    {
+                        @itemRole
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
