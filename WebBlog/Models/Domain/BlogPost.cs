@@ -14,5 +14,6 @@
         public Boolean Visible { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
+        // TODO add comments
     }
 }
