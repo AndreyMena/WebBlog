@@ -1,6 +1,8 @@
-﻿@model IPagedList<WebBlog.Models.Domain.Tag>
+﻿@*
+@model IPagedList<WebBlog.Models.Domain.Tag>
 @{
 }
+*@
 
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
@@ -8,17 +10,15 @@
     </div>
 </div>
 <a>sadasdsdasdasd</a>
-@await Component.InvokeAsync("List"@*,
+@await Component.InvokeAsync("List",
                  new {
                      indexPage =  ViewData["indexPage"]}
-*@)
+)
 @*
 @await Component.InvokeAsync("List",
                  new {
                      indexPage =  ViewData["indexPage"]}
                  )
-
-*@
 
 @section scripts{
     <script language="javascript" type="text/javascript">
@@ -37,6 +37,8 @@
         });
     </script>
 }
+*@
+
 
 
     @*

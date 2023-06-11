@@ -31,19 +31,36 @@
     {
         <p>No tags found!</p>
     }
+    <div id="contentPager">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        @Html.PagedListPager(Model, indexPage => Url.Action("List", new { indexPage }))
+        @*
+
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { indexPage = page }))
+        *@
+
+    </div>
 </div>
 <a>el nos sadasd @Model.PageCount</a>
 <a>el nos sadasd @Model.PageNumber</a>
 
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-<div id="contentPager">
-    @*
-
-    *@
-
-    @Html.PagedListPager(Model, indexPage => Url.Action("List", new { indexPage }))
-
-</div>
+@section Scripts{
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            $(document).on("click", "#contentPager a[href]", function () {
+                $.ajax({
+                    url: $(this).attr("href"),
+                    type: 'GET',
+                    cache: false,
+                    success: function (result) {
+                        $('#content').html(result);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}
 @*
 @await Component.InvokeAsync("List",
     new { indexPage =  ViewData["indexPage"]})

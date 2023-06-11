@@ -44,7 +44,7 @@ namespace WebBlog.Controllers
         {
             var tags = await _tagRepository.GetAllAsync();
 
-            //ViewData["indexPage"] = indexPage;
+            ViewData["indexPage"] = indexPage ?? 1;
             /*
             return ViewComponent("List",
             new
@@ -52,7 +52,7 @@ namespace WebBlog.Controllers
                 indexPage = _indexPage
             });
             */
-            return View(tags.ToPagedList());
+            return View(tags);
         }
 
         [HttpGet]
