@@ -24,7 +24,7 @@ namespace WebBlog.Views
                 indexPage = _indexPage
             });
             */
-            return View(tags.ToPagedList(indexPage ?? 3, 5 /*Cantidad de elementos*/));
+            return View(tags.ToPagedList(indexPage ?? 1, 5 /*Cantidad de elementos*/));
         }
     }
 }
