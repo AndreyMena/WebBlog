@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.Data;
+using WebBlog.Models;
 using WebBlog.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,9 @@ builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<AppUser>(
+    options => options.SignIn.RequireConfirmedAccount = false).AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
