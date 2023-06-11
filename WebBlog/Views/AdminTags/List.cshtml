@@ -1,5 +1,4 @@
-﻿@model IEnumerable<WebBlog.Models.Domain.Tag>
-
+﻿@model IPagedList<WebBlog.Models.Domain.Tag>
 @{
 }
 
@@ -8,9 +7,41 @@
         <h1>Show All Tags - Only Admin</h1>
     </div>
 </div>
+<a>sadasdsdasdasd</a>
+@await Component.InvokeAsync("List",
+                 new {
+                     indexPage =  ViewData["indexPage"]}
+)
+@*
+@await Component.InvokeAsync("List",
+                 new {
+                     indexPage =  ViewData["indexPage"]}
+                 )
 
+*@
+
+@section scripts{
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            $(document).on("click", "#contentPager a[href]", function () {
+                $.ajax({
+                    url: $(this).attr("href"),
+                    type: 'GET',
+                    cache: false,
+                    success: function (result) {
+                        $('#content').html(result);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}
+
+
+    @*
 <div class="container py-5">
-    @if (Model != null && Model.Any()) 
+    @if (Model != null && Model.Any())
     {
         <table class="table table-striped">
             <thead>
@@ -23,7 +54,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var tag in Model) 
+                @foreach (var tag in Model)
                 {
                     <tr>
                         <td>@tag.Id</td>
@@ -34,9 +65,16 @@
                 }
             </tbody>
         </table>
-    } 
+    }
     else
     {
         <p>No tags found!</p>
     }
 </div>
+
+*@
+
+    @*
+@Html.PagedListPager(Model, i =>Url.Action("List", "AdminTags", new {search=Request.QueryString[""]}))
+
+*@

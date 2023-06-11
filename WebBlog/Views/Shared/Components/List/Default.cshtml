@@ -1,0 +1,51 @@
+﻿@model IPagedList<WebBlog.Models.Domain.Tag>
+
+<div>Menu</div>
+<div class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Display Name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tag in Model)
+                {
+                    <tr>
+                        <td>@tag.Id</td>
+                        <td>@tag.Name</td>
+                        <td>@tag.DisplayName</td>
+                        <td><a class="" asp-area="" asp-controller="AdminTags" asp-action="Edit" asp-route-id="@tag.Id">Edit</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No tags found!</p>
+    }
+</div>
+
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+<div id="contentPager">
+    @*
+
+    *@
+
+    @Html.PagedListPager(Model, page => Url.Action("List", new { page }))
+
+</div>
+@*
+@await Component.InvokeAsync("List",
+    new { indexPage =  ViewData["indexPage"]})
+)
+
+*@

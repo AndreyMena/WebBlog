@@ -22,7 +22,11 @@ builder.Services.AddDefaultIdentity<AppUser>(
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddRazorOptions(options =>
+     {
+         options.ViewLocationFormats.Add("/{0}.cshtml");
+     });
 
 var app = builder.Build();
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using WebBlog.Data;
 using WebBlog.Models.Domain;
 using WebBlog.Repositories;
+using X.PagedList;
 
 namespace WebBlog.Controllers
 {
@@ -37,10 +40,18 @@ namespace WebBlog.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(int? indexPage)
         {
             var tags = await _tagRepository.GetAllAsync();
 
+            ViewData["indexPage"] = indexPage;
+            /*
+            return ViewComponent("List",
+            new
+            {
+                indexPage = _indexPage
+            });
+            */
             return View(tags);
         }
 
