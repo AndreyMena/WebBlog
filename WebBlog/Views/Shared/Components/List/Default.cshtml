@@ -38,26 +38,45 @@
                     }
                 </tbody>
             </table>
+            <div id="contentPager">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, indexPage => Url.Action("List", new { indexPage }))
+                @*
+
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { indexPage = page }))
+                *@
+
+            </div>
         }
         else
         {
             <p>No tags found!</p>
         }
-        <div id="contentPager">
-            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-            @Html.PagedListPager(Model, indexPage => Url.Action("List", new { indexPage }))
-            @*
-
-            @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { indexPage = page }))
-            *@
-
-        </div>
     </div>
 </div>
 <a>el nos sadasd @Model.PageCount</a>
 <a>el nos sadasd @Model.PageNumber</a>
 
 @section Scripts{
+        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("click", function (event) {
+            if (event.target.matches("#contentPager a[href]")) {
+                event.preventDefault();
+
+                fetch(event.target.href, {
+                    method: 'GET',
+                    cache: 'no-cache'
+                })
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (result) {
+                    document.querySelector('#content').innerHTML = result;
+                });
+            }
+        });
+    });
+    @*
     <script language="javascript" type="text/javascript">
         $(document).ready(function () {
             $(document).on("click", "#contentPager a[href]", function () {
@@ -73,6 +92,8 @@
             });
         });
     </script>
+
+    *@
 }
 @*
 @await Component.InvokeAsync("List",
