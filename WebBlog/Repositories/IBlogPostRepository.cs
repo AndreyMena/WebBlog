@@ -13,5 +13,7 @@ namespace WebBlog.Repositories
         public Task<BlogPost?> UpdateAsync(BlogPost blogPost);
 
         public Task<BlogPost?> DeleteAsync(Guid id);
+
+        public Task<BlogPost?> GetByUrlHandleAsync(string urlHandle);
     }
 }

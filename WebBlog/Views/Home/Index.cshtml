@@ -1,8 +1,120 @@
-﻿@{
+﻿@model WebBlog.Models.ViewModels.HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-5 py-5">
+        <div class="col-12 col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">
+                Web Blog - The Tech Blog
+            </h1>
+            <p class="lead">
+                In Web Blog your are going to find blogs covering different topis like HTML, CSS, Javascript, ASP. NET, C#, React etc.
+                If you want to read the latest blogs. Join to The Tech Blog.
+            </p>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <img src="https://images.pexels.com/photos/3653849/pexels-photo-3653849.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+            alt="Blog banner phto"
+            class="d-block mx-lg-auto img-fluid " width="250"/>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row g-5 py-5">
+        <div class="col-12 col-lg-9">
+            @if (Model != null && Model.BlogPosts.Any())
+            {
+                @foreach (var blogPost in Model.BlogPosts)
+                {
+                    <div class="mb-5 bg-light box-shadow p-5" width="100%">
+                        <img src="@blogPost.ImageUrl" alt="@blogPost.Heading" 
+                            class="mb-2 d-block img-fluid"/>
+                        <h2 class="mb-4">@blogPost.Heading</h2>
+                        <p class="mb-4">
+                            Author: @blogPost.Author
+                            <br/>
+                            Published Date: @blogPost.PublishedDate.ToShortDateString()
+                        </p>
+                        <p class="mb-4">
+                            @foreach (var tag in blogPost.Tags)
+                            {
+                                <span class="badge bg-primary me-2">@tag.Name</span>
+
+                            }
+                        </p>
+                        @if (@blogPost.ShortDescription.Length > 300)
+                        {
+                            @*TODO: Link to read the full posts*@
+                            <p class="mb-4">@blogPost.ShortDescription.Substring(0, 300 - 1)... <a class="link"asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a></p>
+                        }
+                        else
+                        {
+                            <p class="mb-4">@blogPost.ShortDescription</p>
+                        }
+
+                        <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
+                    </div>
+                }
+            }
+        </div>
+        <div class="col-12 col-lg-3">
+            @if (Model != null && Model.BlogPosts.Any())
+            {
+                <h3 class="mb-4">Categories</h3>
+                <ul class="list-group mb-5">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <li class="list-group-item">
+                            <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
+                                @tag.Name
+                            </a>
+                        
+                        </li>
+                    }
+                </ul>
+
+                <h3 class="mb-4">Authors</h3>
+                <ul class="list-group">
+                    @*TODO: Añadir Authors*@
+                    @*@foreach (var blogPost in Model.BlogPosts)
+                    {
+                        <li class="list-group-item">
+                            <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
+                                Hola
+                            </a>
+
+                        </li>
+                    }*@
+                </ul>
+            }
+            else
+            {
+                <h3 class="mb-4">Categories</h3>
+                <ul class="list-group">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <li class="list-group-item">
+                            <p class="mb-4">No tags found</p>
+                        </li>
+                    }
+                </ul>
+
+                <h3 class="mb-4">Authors</h3>
+                <ul class="list-group">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <li class="list-group-item">
+                            <p class="mb-4">No authors found</p>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
 </div>

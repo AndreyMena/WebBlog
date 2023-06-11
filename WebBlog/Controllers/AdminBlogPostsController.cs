@@ -31,7 +31,7 @@ namespace WebBlog.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Add(AddBlogPostRequest addBlogPostRequest)
         {
             var blogPost = new BlogPost

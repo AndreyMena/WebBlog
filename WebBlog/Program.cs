@@ -1,3 +1,4 @@
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.Data;
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<WebBlogDbContext>(options =>
 
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+builder.Services.AddScoped<IImageRepository, CloudinaryImageRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
