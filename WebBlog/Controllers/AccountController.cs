@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.Models;
-using WebBlog.Models.Domain;
 using WebBlog.Models.ViewModels;
 
 namespace WebBlog.Controllers
@@ -19,9 +18,6 @@ namespace WebBlog.Controllers
             userManager = _userManager;
             signInManager = _signInManager;
         }
-
-        [BindProperty]
-        public RegisterInputModel Input { get; set; }
 
         [HttpGet]
         public IActionResult Register()
@@ -49,6 +45,38 @@ namespace WebBlog.Controllers
             }
 
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View();
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("index", "home");
         }
     }
 }
