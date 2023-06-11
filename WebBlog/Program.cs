@@ -14,6 +14,7 @@ builder.Services.AddDbContext<WebBlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WebBlogConnectinString")));
 
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

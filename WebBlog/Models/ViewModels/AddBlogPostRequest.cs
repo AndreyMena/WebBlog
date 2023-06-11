@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using WebBlog.Models.Domain;
 
-namespace WebBlog.Models.Domain
+namespace WebBlog.Models.ViewModels
 {
-    public class BlogPost
+    public class AddBlogPostRequest
     {
-        public Guid Id { get; set; }
         public string Heading { get; set; }
         public string ImageUrl { get; set; }
         public string PageTitle { get; set; }
@@ -15,7 +15,7 @@ namespace WebBlog.Models.Domain
         public string Author { get; set; }
         public Boolean Visible { get; set; }
 
-        public ICollection<Tag> Tags { get; set; }
-        // TODO add comments
+        public IEnumerable<SelectListItem> Tags { get; set; }
+        public string[] SelectedTags { get; set; } = Array.Empty<string>();
     }
 }
