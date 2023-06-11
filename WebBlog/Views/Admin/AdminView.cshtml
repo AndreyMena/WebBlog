@@ -4,39 +4,41 @@
 }
 @model AdminViewModel
 
-<h1>Admin View</h1>
+<div class="container">
+    <h1>Admin View</h1>
 
-<a class="btn btn-primary" href="/Admin/CreateUser">Add users</a>
-<br />
-<br />
-<h3>Lista de usuarios y roles</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Editar</th>
-            <th>Borrar</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.ModelUsersAndRoles)
-        {
+    <a class="btn btn-primary" href="/Admin/CreateUser">Add users</a>
+    <br />
+    <br />
+    <h3>Lista de usuarios y roles</h3>
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.Item1.Email</td>
-                <td>
-                    @foreach (var itemRole in item.Item2)
-                    {
-                        @itemRole
-                    }
-                </td>
-                <td>
-                    <a class="btn btn-secondary" asp-controller="Admin" asp-action="EditUser" asp-route-id="@item.Item1.Email">Editar</a>
-                </td>
-                <td>
-                    <a type="button" class="btn btn-danger" asp-controller="Admin" asp-action="Delete">Borrar</a>
-                </td>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Editar</th>
+                <th>Borrar</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ModelUsersAndRoles)
+            {
+                <tr>
+                    <td>@item.Item1.Email</td>
+                    <td>
+                        @foreach (var itemRole in item.Item2)
+                        {
+                            @itemRole
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-secondary" asp-controller="Admin" asp-action="EditUser" asp-route-id="@item.Item1.Email">Editar</a>
+                    </td>
+                    <td>
+                        <a type="button" class="btn btn-danger" asp-controller="Admin" asp-action="Delete">Borrar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
