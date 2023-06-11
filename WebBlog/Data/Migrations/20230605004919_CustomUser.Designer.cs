@@ -11,7 +11,7 @@ using WebBlog.Data;
 
 namespace WebBlog.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(AuthDbContext))]
     [Migration("20230605004919_CustomUser")]
     partial class CustomUser
     {

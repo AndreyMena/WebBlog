@@ -5,9 +5,9 @@ using WebBlog.Models;
 
 namespace WebBlog.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<AppUser>
+    public class AuthDbContext : IdentityDbContext<AppUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public AuthDbContext(DbContextOptions<AuthDbContext> options)
             : base(options)
         {
         }
