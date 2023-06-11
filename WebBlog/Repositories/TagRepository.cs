@@ -2,7 +2,7 @@
 using WebBlog.Data;
 using WebBlog.Models.Domain;
 
-namespace WebBlog.Repositories.TagRepository
+namespace WebBlog.Repositories
 {
     public class TagRepository : ITagRepository
     {

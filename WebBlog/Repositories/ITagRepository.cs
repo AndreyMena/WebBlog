@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebBlog.Models.Domain;
 
-namespace WebBlog.Repositories.TagRepository.TagRepository
+namespace WebBlog.Repositories
 {
     public interface ITagRepository
     {

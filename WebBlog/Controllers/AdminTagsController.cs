@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.Data;
 using WebBlog.Models.Domain;
+using WebBlog.Repositories;
 
 namespace WebBlog.Controllers
 {

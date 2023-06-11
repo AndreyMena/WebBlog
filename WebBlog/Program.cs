@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.Data;
-using WebBlog.Repositories.TagRepository;
+using WebBlog.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
