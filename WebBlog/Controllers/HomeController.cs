@@ -65,6 +65,27 @@ namespace WebBlog.Controllers
             return View(homeViewModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetComments(Guid Id)
+        {
+
+            var blogCommentsModel = await _commentRepository.GetCommentsByBlogIdAsync(Id);
+
+            var blogCommentView = new List<CommentViewModel>();
+
+            foreach (var comment in blogCommentsModel)
+            {
+                blogCommentView.Add(new CommentViewModel
+                {
+                    Description = comment.Description,
+                    DateAdded = comment.DateAdded.ToShortDateString(),
+                    Email = comment.Email
+                });
+            }
+
+            return Json(blogCommentView);
+        }
+
         public IActionResult Privacy()
         {
             return View();

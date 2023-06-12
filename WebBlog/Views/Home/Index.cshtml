@@ -58,7 +58,12 @@
                         }
 
                         <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
-                        <a class="link d-block mt-4" asp-area="" asp-controller="Blogs" asp-action="GetComments">Comments: @blogPost.TotalComments</a>
+                        <form class="number-comments" method="POST">
+                            <input type="hidden" id="BlogPosts" value="@blogPost.UrlHandle">
+                            <button class="btn mt-4" type="submit" d-block mt-4" >Comments: @blogPost.TotalComments</button>
+                        </form>
+                        
+                        <div id="@blogPost.Id"></div>
                     </div>
                 }
             }
@@ -118,3 +123,75 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.number-comments').submit(function (event) {
+                event.preventDefault(); // Prevent the form from submitting normally
+
+                // Get the form data
+                var formData = {
+                    Id: $('#BlogPosts').val(),
+                };
+                
+                // Make the AJAX call
+                $.ajax({
+                    url: '@Url.Action("GetComments", "Home")', // Replace "ControllerName" with the actual name of your controller
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // Handle the successful response
+                        console.log(data);
+
+                        $(`#${formData.Id}`).append(` <div class="card">
+                                        <div class="card-header">
+                                            <h5>Comments</h5>
+
+                                            <form id="comment-form" method="post">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="Email" asp-for="Email" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Description</label>
+                                                    <textarea class="form-control" id="CommentDescription" asp-for="CommentDescription" maxlength="200"></textarea>
+                                                </div>
+
+                                                <div class="">
+                                                    <button type="submit" class="btn btn-dark">Submit</button>
+                                                    <input type="hidden" id="Id" asp-for="Id" />
+                                                    <input type="hidden" id="UrlHandle" asp-for="UrlHandle" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="${formData.Id}-display">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`);
+                        for (var comment of data) {
+                            $(`#${formData.Id}-display`).append(`
+                                                     <div class="card mb-3">
+                                                        <div class="card-body">
+                                                            <div>${comment.description}</div>
+                                                            <div class="d-flex justify-content-between">
+                                                                <span class="text-secondary">${comment.email}</span>
+                                                                <span class="text-secondary">${comment.dateAdded}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                        `);
+                        }
+                    },
+                    error: function () {
+                        // Handle any errors
+                        alert('Error occurred while submitting the comment.');
+                    }
+                });
+            });
+        });
+    </script>
+}
