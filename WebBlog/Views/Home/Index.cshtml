@@ -78,7 +78,7 @@
                         <li class="list-group-item">
                             <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
                                 @*@tag.Name*@
-                                @Html.ActionLink(tag.Name, "Index", "Home", new {category = tag.Name})
+                                @Html.ActionLink(tag.Name, "Index", "Home", new {category = tag.Name, email = ""})
                             </a>
                         
                         </li>
@@ -87,16 +87,15 @@
 
                 <h3 class="mb-4">Authors</h3>
                 <ul class="list-group">
-                    @*TODO: Añadir Authors*@
-                    @*@foreach (var blogPost in Model.BlogPosts)
+                    @foreach (var author in Model.Authors)
                     {
                         <li class="list-group-item">
                             <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
-                                Hola
+                                @Html.ActionLink(author.FirstName +" "+ author.LastName, "Index", "Home", new { category = "", email = author.Email})
                             </a>
 
                         </li>
-                    }*@
+                    }
                 </ul>
             }
             else
@@ -113,7 +112,7 @@
 
                 <h3 class="mb-4">Authors</h3>
                 <ul class="list-group">
-                    @foreach (var tag in Model.Tags)
+                    @foreach (var author in Model.Authors)
                     {
                         <li class="list-group-item">
                             <p class="mb-4">No authors found</p>

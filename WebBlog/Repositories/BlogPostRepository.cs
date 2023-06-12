@@ -48,8 +48,14 @@ namespace WebBlog.Repositories
             var blogTags = blogs.Where(b => b.Tags.Any(t => t.Name == tag));
             return blogTags;
         }
-        
 
+        public async Task<IEnumerable<BlogPost>> GetByAuthor(string email)
+        {
+            var blogs = await _context.BlogPost.Include(x => x.Tags).ToListAsync();
+            var blogTags = blogs.Where(b => b.Author == email);
+            return blogTags;
+        }
+        
         public async Task<BlogPost> GetByUrlHandleAsync(string urlHandle)
         {
             return await _context.BlogPost.Include(x => x.Tags).FirstOrDefaultAsync(x => x.UrlHandle == urlHandle);

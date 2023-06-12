@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebBlog.Models;
 using WebBlog.Models.Domain;
 
 namespace WebBlog.Data
@@ -12,5 +13,7 @@ namespace WebBlog.Data
         public DbSet<BlogPost> BlogPost { get; set; }
         public DbSet<Tag> Tag { get; set; }
         public DbSet<Comment> Comment { get; set; }
+
+        public DbSet<AppUser> Users { get; set; }
     }
 }

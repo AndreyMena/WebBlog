@@ -8,5 +8,7 @@ namespace WebBlog.Models.ViewModels
         public IEnumerable<BlogDetailsViewModel> BlogPosts { get; set; }
 
         public IEnumerable<Tag> Tags { get; set; }
+
+        public IList<AppUser> Authors { get; set; }
     }
 }
