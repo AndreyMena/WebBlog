@@ -2,15 +2,16 @@
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Mvc
+@*
+
 <link href="~/Content/PagedList.css" rel="stylesheet"
       type="text/css" />
+*@
 
-
+<link href="c:\users\andre\onedrive\escritorio\webblog\webblog\views\content\pagedlist.css" rel="stylesheet" />
 @{
-    ViewBag.Title = "List";
+    Layout = null;
 }
-
-<div>Menu</div>
 
 <div id="content">
     <div class="container py-5">
@@ -54,9 +55,8 @@
         }
     </div>
 </div>
-<a>el nos sadasd @Model.PageCount</a>
-<a>el nos sadasd @Model.PageNumber</a>
 
+    @*
 @section Scripts{
         document.addEventListener("DOMContentLoaded", function () {
         document.addEventListener("click", function (event) {
@@ -76,7 +76,6 @@
             }
         });
     });
-    @*
     <script language="javascript" type="text/javascript">
         $(document).ready(function () {
             $(document).on("click", "#contentPager a[href]", function () {
@@ -93,8 +92,8 @@
         });
     </script>
 
-    *@
 }
+    *@
 @*
 @await Component.InvokeAsync("List",
     new { indexPage =  ViewData["indexPage"]})

@@ -1,28 +1,20 @@
 ﻿@*
 @model IPagedList<WebBlog.Models.Domain.Tag>
-@{
-}
 *@
 
-<div class="bg-secondary bg-opacity-10 py-2">
-    <div class="container">
-        <h1>Show All Tags - Only Admin</h1>
-    </div>
-</div>
-<a>sadasdsdasdasd</a>
+@{
+    ViewData["Title"] = "List";
+}
+
+
+
 @await Component.InvokeAsync("List",
                  new {
                      indexPage =  ViewData["indexPage"]}
 )
 
 
-@*
-@await Component.InvokeAsync("List",
-                 new {
-                     indexPage =  ViewData["indexPage"]}
-                 )
-
-@section scripts{
+@section Scripts{
     <script language="javascript" type="text/javascript">
         $(document).ready(function () {
             $(document).on("click", "#contentPager a[href]", function () {
@@ -39,6 +31,12 @@
         });
     </script>
 }
+@*
+@await Component.InvokeAsync("List",
+                 new {
+                     indexPage =  ViewData["indexPage"]}
+                 )
+
 *
 
 
