@@ -64,8 +64,8 @@
                         </form>
                         
                         <div id="@blogPost.Id">
-                            <div class="card">
-                                <div class="card-header">
+                            <div class="card" style="display:none;">
+                                <div class="card-header"  >
                                     <h5>Comments</h5>
 
                                     <form class="comment-form" method="post">
@@ -168,8 +168,27 @@
                     data: formData,
                     success: function (data) {
                         // Handle the successful response
-                        console.log(data);
-
+                        if ($(`#${formData.Id}`).children().css('display') === 'none') 
+                        {
+                            $(`#${formData.Id}`).children().css('display', 'block');
+                            $(`#${formData.Id}-display`).children().remove();
+                            for (var comment of data) {
+                                $(`#${formData.Id}-display`).append(`
+                                                             <div class="card mb-3">
+                                                                <div class="card-body">
+                                                                    <div>${comment.description}</div>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <span class="text-secondary">${comment.email}</span>
+                                                                        <span class="text-secondary">${comment.dateAdded}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                `);
+                            }
+                        } else {
+                            $(`#${formData.Id}`).children().css('display', 'none');
+                        }
+                        
                         ////$(`#${formData.Id}`).append(` 
                         ////          <div class="card">
                         ////                <div class="card-header">
@@ -200,19 +219,7 @@
                         ////            </div>
                                 
                         //// `);
-                        for (var comment of data) {
-                            $(`#${formData.Id}-display`).append(`
-                                                     <div class="card mb-3">
-                                                        <div class="card-body">
-                                                            <div>${comment.description}</div>
-                                                            <div class="d-flex justify-content-between">
-                                                                <span class="text-secondary">${comment.email}</span>
-                                                                <span class="text-secondary">${comment.dateAdded}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                        `);
-                        }
+                       
                     },
                     error: function () {
                         // Handle any errors
