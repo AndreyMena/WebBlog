@@ -45,7 +45,6 @@
                             @foreach (var tag in blogPost.Tags)
                             {
                                 <span class="badge bg-primary me-2">@tag.Name</span>
-
                             }
                         </p>
                         @if (@blogPost.ShortDescription.Length > 300)
@@ -59,6 +58,7 @@
                         }
 
                         <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
+                        <a class="link d-block mt-4" asp-area="" asp-controller="Blogs" asp-action="GetComments">Comments: @blogPost.TotalComments</a>
                     </div>
                 }
             }

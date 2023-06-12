@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using WebBlog.Models.Domain;
 
-namespace WebBlog.Models.Domain
+namespace WebBlog.Models.ViewModels
 {
-    public class BlogPost
+    public class BlogDetailsViewModel
     {
         public Guid Id { get; set; }
         public string Heading { get; set; }
@@ -17,6 +17,12 @@ namespace WebBlog.Models.Domain
 
         public ICollection<Tag> Tags { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        public int TotalComments { get; set; }
+
+        public string CommentDescription { get; set; }
+
+        public string Email { get; set; }
+
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }

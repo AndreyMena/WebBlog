@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebBlog.Data;
 
 #nullable disable
 
-namespace WebBlog.Migrations
+namespace WebBlog.Data.Migrations
 {
     [DbContext(typeof(WebBlogDbContext))]
-    partial class WebBlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230611214552_addion comments ")]
+    partial class addioncomments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

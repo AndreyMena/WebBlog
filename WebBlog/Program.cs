@@ -17,6 +17,7 @@ builder.Services.AddDbContext<WebBlogDbContext>(options =>
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 builder.Services.AddScoped<IImageRepository, CloudinaryImageRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
