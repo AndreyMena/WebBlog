@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebBlog.Models;
+using WebBlog.Models.Domain;
 using WebBlog.Models.ViewModels;
 using WebBlog.Repositories;
 
@@ -77,6 +78,38 @@ namespace WebBlog.Controllers
             {
                 blogCommentView.Add(new CommentViewModel
                 {
+                    Description = comment.Description,
+                    DateAdded = comment.DateAdded.ToShortDateString(),
+                    Email = comment.Email
+                });
+            }
+
+            return Json(blogCommentView);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostComments(HomeViewModel homeViewModel)
+        {
+            var domainModel = new Comment
+            {
+                PostId = homeViewModel.Id,
+                Description = homeViewModel.CommentDescription,
+                Email = homeViewModel.Email,
+                DateAdded = DateTime.Now,
+            };
+
+            await _commentRepository.AddAsync(domainModel);
+
+            var Id = homeViewModel.Id;
+            var blogCommentsModel = await _commentRepository.GetCommentsByBlogIdAsync(Id);
+
+            var blogCommentView = new List<CommentViewModel>();
+
+            foreach (var comment in blogCommentsModel)
+            {
+                blogCommentView.Add(new CommentViewModel
+                {
+                    Id = homeViewModel.Id,
                     Description = comment.Description,
                     DateAdded = comment.DateAdded.ToShortDateString(),
                     Email = comment.Email
