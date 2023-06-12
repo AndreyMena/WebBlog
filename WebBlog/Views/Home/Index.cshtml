@@ -77,7 +77,8 @@
                     {
                         <li class="list-group-item">
                             <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
-                                @tag.Name
+                                @*@tag.Name*@
+                                @Html.ActionLink(tag.Name, "Index", "Home", new {category = tag.Name})
                             </a>
                         
                         </li>
