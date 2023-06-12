@@ -60,7 +60,7 @@
                         <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
                         <form class="number-comments" method="POST">
                             <input type="hidden" id="id-post-@blogPost.Id" value="@blogPost.Id" asp-for="Id">
-                            <button class="btn mt-4" type="submit" d-block mt-4" >Comments: @blogPost.TotalComments</button>
+                            <button class="btn mt-4" type="submit" d-block mt-4" id="Total-Comments-@blogPost.Id">Comments: @blogPost.TotalComments</button>
                         </form>
                         
                         <div id="@blogPost.Id">
@@ -170,6 +170,8 @@
                         // Handle the successful response
                         if ($(`#${formData.Id}`).children().css('display') === 'none') 
                         {
+                            $(`#Total-Comments-${formData.Id}`).children().css('display', 'block');
+
                             $(`#${formData.Id}`).children().css('display', 'block');
                             $(`#${formData.Id}-display`).children().remove();
                             for (var comment of data) {
@@ -250,10 +252,10 @@
                         // Handle the successful response
                         console.log(data);
 
-
+                        let count = 0;
                         $(`#${formData.Id}-display`).children().remove();
                         for (var comment of data) {
-                            console.log(comment.id)
+                            count += 1;
                             $(`#${comment.id}-display`).append(`
                                                      <div class="card mb-3">
                                                         <div class="card-body">
@@ -266,6 +268,7 @@
                                                     </div>
                                         `);
                         }
+                        $(`#Total-Comments-${formData.Id}`).text(`Comments: ${count}`);
                     },
                     error: function () {
                         // Handle any errors
