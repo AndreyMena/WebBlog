@@ -15,5 +15,7 @@ namespace WebBlog.Repositories
         public Task<BlogPost?> DeleteAsync(Guid id);
 
         public Task<BlogPost?> GetByUrlHandleAsync(string urlHandle);
+
+        public Task<IEnumerable<BlogPost>> GetByTag(string tag);
     }
 }

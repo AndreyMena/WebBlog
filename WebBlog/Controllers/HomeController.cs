@@ -25,9 +25,14 @@ namespace WebBlog.Controllers
             _commentRepository = commentRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? category)
         {
             var blogPosts = await _postsRepository.GetAllAsync();
+            if (category != null)
+            {
+                blogPosts = await _postsRepository.GetByTag(category);
+            }
+
             var blogPostsDetails = new List<BlogDetailsViewModel>();
 
             foreach ( var post in blogPosts )
@@ -85,6 +90,24 @@ namespace WebBlog.Controllers
             }
 
             return Json(blogCommentView);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BlogsByTag(string tag)
+        {
+            Guid tagBlog = Guid.Parse(tag);
+            var listBlogs = await _postsRepository.GetAllAsync();
+            listBlogs.Select(p => p.Tags.Where(t =>t.Name == tag));
+            //await _postsRepository.GetAllAsync().Result.Where(p => p.Id == tagBlog);
+
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult BlogsByTag()
+        {
+            return View();
         }
 
         [HttpPost]
