@@ -60,7 +60,6 @@ namespace WebBlog.Controllers
                 blogPostsDetails.Add(postDetails);
             }
             
-            blogPostsDetails = blogPostsDetails.OrderByDescending(x => x.PublishedDate).ToList();
             var tags = await _tagRepository.GetAllAsync();
 
             var homeViewModel = new HomeViewModel
@@ -98,10 +97,7 @@ namespace WebBlog.Controllers
         {
             Guid tagBlog = Guid.Parse(tag);
             var listBlogs = await _postsRepository.GetAllAsync();
-            listBlogs = listBlogs.OrderByDescending(x => x.PublishedDate).ToList();
             listBlogs.Select(p => p.Tags.Where(t =>t.Name == tag));
-            //await _postsRepository.GetAllAsync().Result.Where(p => p.Id == tagBlog);
-
 
             return View();
         }
