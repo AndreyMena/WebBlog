@@ -9,11 +9,11 @@ using WebBlog.Data;
 
 #nullable disable
 
-namespace WebBlog.Data.Migrations
+namespace WebBlog.Migrations
 {
     [DbContext(typeof(WebBlogDbContext))]
-    [Migration("20230611214552_addion comments ")]
-    partial class addioncomments
+    [Migration("20230614045122_UpdateDB")]
+    partial class UpdateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
