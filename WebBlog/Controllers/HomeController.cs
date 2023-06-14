@@ -122,8 +122,6 @@ namespace WebBlog.Controllers
             Guid tagBlog = Guid.Parse(tag);
             var listBlogs = await _postsRepository.GetAllAsync();
             listBlogs.Select(p => p.Tags.Where(t =>t.Name == tag));
-            //await _postsRepository.GetAllAsync().Result.Where(p => p.Id == tagBlog);
-
 
             return View();
         }
