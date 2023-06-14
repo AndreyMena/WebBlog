@@ -49,6 +49,9 @@ namespace WebBlog.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EmailAuthor")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Heading")
                         .HasColumnType("nvarchar(max)");
 
