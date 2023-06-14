@@ -17,5 +17,8 @@ namespace WebBlog.Repositories
         public Task<BlogPost?> GetByUrlHandleAsync(string urlHandle);
 
         public Task<IEnumerable<BlogPost>> GetByTag(string tag);
+
+        public Task<IEnumerable<BlogPost>> GetByAuthor(string email);
+        
     }
 }

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebBlog.Models;
+using WebBlog.Models.Domain;
 using WebBlog.Models.ViewModels;
 using WebBlog.Repositories;
 
@@ -12,24 +15,35 @@ namespace WebBlog.Controllers
         private readonly ITagRepository _tagRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<AppUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public HomeController(ILogger<HomeController> logger, 
                                 IBlogPostRepository blogPostRepository, 
                                 ITagRepository tagRepository, 
-                                ICommentRepository commentRepository)
+                                ICommentRepository commentRepository,
+                                UserManager<AppUser> _userManager,
+                                RoleManager<IdentityRole> _roleManager)
         {
             _postsRepository = blogPostRepository;
             _logger = logger;
             _tagRepository = tagRepository;
             _commentRepository = commentRepository;
+            userManager = _userManager;
+            roleManager = _roleManager;
         }
 
-        public async Task<IActionResult> Index(string? category)
+        public async Task<IActionResult> Index(string? category, string? email)
         {
             var blogPosts = await _postsRepository.GetAllAsync();
             if (category != null)
             {
                 blogPosts = await _postsRepository.GetByTag(category);
+            }
+            if (email != null)
+            {
+                //TODO FILTRAR POR email (Author)
+                blogPosts = await _postsRepository.GetByAuthor(email);
             }
 
             var blogPostsDetails = new List<BlogDetailsViewModel>();
@@ -61,11 +75,22 @@ namespace WebBlog.Controllers
             
             var tags = await _tagRepository.GetAllAsync();
 
+            /*
+            foreach (var user in userManager.Users) {
+                if (Roles.U) {
+                    userManager.GetUsersInRoleAsync("Author");
+                }
+            }*/
+            var authors = await userManager.GetUsersInRoleAsync("Author");
+
             var homeViewModel = new HomeViewModel
             {
                 BlogPosts = blogPostsDetails,
                 Tags = tags,
+                Authors = authors
             };
+
+
 
             return View(homeViewModel);
         }
@@ -97,8 +122,6 @@ namespace WebBlog.Controllers
             Guid tagBlog = Guid.Parse(tag);
             var listBlogs = await _postsRepository.GetAllAsync();
             listBlogs.Select(p => p.Tags.Where(t =>t.Name == tag));
-            //await _postsRepository.GetAllAsync().Result.Where(p => p.Id == tagBlog);
-
 
             return View();
         }
@@ -107,6 +130,38 @@ namespace WebBlog.Controllers
         public IActionResult BlogsByTag()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostComments(HomeViewModel homeViewModel)
+        {
+            var domainModel = new Comment
+            {
+                PostId = homeViewModel.Id,
+                Description = homeViewModel.CommentDescription,
+                Email = homeViewModel.Email,
+                DateAdded = DateTime.Now,
+            };
+
+            await _commentRepository.AddAsync(domainModel);
+
+            var Id = homeViewModel.Id;
+            var blogCommentsModel = await _commentRepository.GetCommentsByBlogIdAsync(Id);
+
+            var blogCommentView = new List<CommentViewModel>();
+
+            foreach (var comment in blogCommentsModel)
+            {
+                blogCommentView.Add(new CommentViewModel
+                {
+                    Id = homeViewModel.Id,
+                    Description = comment.Description,
+                    DateAdded = comment.DateAdded.ToShortDateString(),
+                    Email = comment.Email
+                });
+            }
+
+            return Json(blogCommentView);
         }
 
         public IActionResult Privacy()

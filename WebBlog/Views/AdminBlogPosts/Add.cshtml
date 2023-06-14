@@ -1,6 +1,10 @@
 ﻿@model WebBlog.Models.ViewModels.AddBlogPostRequest;
 @{
 }
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppUser> singInManager
+@inject UserManager<AppUser> userManager
 
 @if (User.IsInRole("Admin"))
 {
@@ -90,6 +94,7 @@ else
         </div>
     </div>
 }
+
 
 @section Scripts {
     <script>

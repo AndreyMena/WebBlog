@@ -3,9 +3,10 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="container col-xxl-8 px-4 py-5">
-    <div class="row align-items-center g-5 py-5">
-        <div class="col-12 col-lg-6">
+
+<div class="col-xxl-12 py-5" id="banner">
+    <div class="row align-items-center g-5 py-5" >
+        <div class="col-12 col-lg-6 mx-5">
             <h1 class="display-5 fw-bold lh-1 mb-3">
                 Web Blog - The Tech Blog
             </h1>
@@ -15,11 +16,11 @@
             </p>
         </div>
 
-        <div class="col-12 col-lg-6">
+  @*      <div class="col-12 col-lg-6">
             <img src="https://images.pexels.com/photos/3653849/pexels-photo-3653849.jpeg?auto=compress&cs=tinysrgb&w=1600" 
             alt="Blog banner phto"
             class="d-block mx-lg-auto img-fluid " width="250"/>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -59,17 +60,46 @@
 
                         <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
                         <form class="number-comments" method="POST">
-                            <input type="hidden" id="BlogPosts" value="@blogPost.UrlHandle">
-                            <button class="btn mt-4" type="submit" d-block mt-4" >Comments: @blogPost.TotalComments</button>
+                            <input type="hidden" id="id-post-@blogPost.Id" value="@blogPost.Id" asp-for="Id">
+                            <button class="btn mt-4" type="submit" d-block mt-4" id="Total-Comments-@blogPost.Id">Comments: @blogPost.TotalComments</button>
                         </form>
                         
-                        <div id="@blogPost.Id"></div>
+                        <div id="@blogPost.Id">
+                            <div class="card" style="display:none;">
+                                <div class="card-header"  >
+                                    <h5>Comments</h5>
+
+                                    <form class="comment-form" method="post">
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="Email-@blogPost.Id" asp-for="Email" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" id="CommentDescription-@blogPost.Id" asp-for="CommentDescription" maxlength="200"></textarea>
+                                        </div>
+
+                                        <div class="">
+                                            <button type="submit" class="btn btn-dark">Submit</button>
+                                            <input type="hidden" id="Id-@blogPost.Id" asp-for="CommentId" value="@blogPost.Id"/>
+                                            <input type="hidden" id="UrlHandle-@blogPost.Id" asp-for="UrlHandle" value="@blogPost.UrlHandle" />
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-body">
+                                    <div id="@blogPost.Id-display">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 }
+            }else{
+                <p class="mb-4">There are no associated blogs</p>
             }
         </div>
         <div class="col-12 col-lg-3">
-            @if (Model != null && Model.BlogPosts.Any())
+            @if (Model != null && (Model.Tags.Any() || Model.Authors.Any()))
             {
                 <h3 class="mb-4">Categories</h3>
                 <ul class="list-group mb-5">
@@ -78,7 +108,7 @@
                         <li class="list-group-item">
                             <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
                                 @*@tag.Name*@
-                                @Html.ActionLink(tag.Name, "Index", "Home", new {category = tag.Name})
+                                @Html.ActionLink(tag.Name, "Index", "Home", new {category = tag.Name, email = ""})
                             </a>
                         
                         </li>
@@ -87,38 +117,31 @@
 
                 <h3 class="mb-4">Authors</h3>
                 <ul class="list-group">
-                    @*TODO: Añadir Authors*@
-                    @*@foreach (var blogPost in Model.BlogPosts)
+                    @foreach (var author in Model.Authors)
                     {
                         <li class="list-group-item">
                             <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
-                                Hola
+                                @Html.ActionLink(author.FirstName +" "+ author.LastName, "Index", "Home", new { category = "", email = author.Email})
                             </a>
 
                         </li>
-                    }*@
+                    }
                 </ul>
             }
             else
             {
                 <h3 class="mb-4">Categories</h3>
                 <ul class="list-group">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <li class="list-group-item">
-                            <p class="mb-4">No tags found</p>
-                        </li>
-                    }
+                    <li class="list-group-item">
+                        <p class="mb-4">No tags found</p>
+                    </li>
                 </ul>
 
                 <h3 class="mb-4">Authors</h3>
                 <ul class="list-group">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <li class="list-group-item">
-                            <p class="mb-4">No authors found</p>
-                        </li>
-                    }
+                    <li class="list-group-item">
+                        <p class="mb-4">No authors found</p>
+                    </li>
                 </ul>
             }
         </div>
@@ -133,9 +156,8 @@
 
                 // Get the form data
                 var formData = {
-                    Id: $('#BlogPosts').val(),
+                    Id: $(event.target).children(":first-child")[0].value,
                 };
-                
                 // Make the AJAX call
                 $.ajax({
                     url: '@Url.Action("GetComments", "Home")', // Replace "ControllerName" with the actual name of your controller
@@ -143,38 +165,95 @@
                     data: formData,
                     success: function (data) {
                         // Handle the successful response
+                        if ($(`#${formData.Id}`).children().css('display') === 'none') 
+                        {
+                            $(`#Total-Comments-${formData.Id}`).children().css('display', 'block');
+
+                            $(`#${formData.Id}`).children().css('display', 'block');
+                            $(`#${formData.Id}-display`).children().remove();
+                            for (var comment of data) {
+                                $(`#${formData.Id}-display`).append(`
+                                                             <div class="card mb-3">
+                                                                <div class="card-body">
+                                                                    <div>${comment.description}</div>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <span class="text-secondary">${comment.email}</span>
+                                                                        <span class="text-secondary">${comment.dateAdded}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                `);
+                            }
+                        } else {
+                            $(`#${formData.Id}`).children().css('display', 'none');
+                        }
+                        
+                        ////$(`#${formData.Id}`).append(` 
+                        ////          <div class="card">
+                        ////                <div class="card-header">
+                        ////                    <h5>Comments</h5>
+
+                        ////                    <form class="comment-form" method="post">
+                        ////                        <div class="mb-3">
+                        ////                            <label class="form-label">Email</label>
+                        ////                            <input type="email" class="form-control" id="Email" asp-for="Email" />
+                        ////                        </div>
+                        ////                        <div class="mb-3">
+                        ////                            <label class="form-label">Description</label>
+                        ////                            <textarea class="form-control" id="CommentDescription" asp-for="CommentDescription" maxlength="200"></textarea>
+                        ////                        </div>
+
+                        ////                        <div class="">
+                        ////                            <button type="submit" class="btn btn-dark">Submit</button>
+                        ////                            <input type="hidden" id="Id" asp-for="Id" />
+                        ////                            <input type="hidden" id="UrlHandle" asp-for="UrlHandle" />
+                        ////                        </div>
+                        ////                    </form>
+                        ////                </div>
+                        ////                <div class="card-body">
+                        ////                    <div id="${formData.Id}-display">
+
+                        ////                    </div>
+                        ////                </div>
+                        ////            </div>
+                                
+                        //// `);
+                       
+                    },
+                    error: function () {
+                        // Handle any errors
+                        alert('Error occurred while submitting the comment.');
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('.comment-form').submit(function (event) {
+                event.preventDefault(); // Prevent the form from submitting normally
+                // Get the form data
+                console.log($(event.target))
+                var formData = {
+                    Email: $(event.target)[0][0].value,
+                    CommentDescription: $(event.target)[0][1].value,
+                    Id: $(event.target)[0][3].value,
+                    UrlHandle: $(event.target)[0][4].value
+                };
+                console.log(formData);
+                // Make the AJAX call
+                $.ajax({
+                    url: '@Url.Action("PostComments", "Home")', // Replace "ControllerName" with the actual name of your controller
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        // Handle the successful response
                         console.log(data);
 
-                        $(`#${formData.Id}`).append(` <div class="card">
-                                        <div class="card-header">
-                                            <h5>Comments</h5>
-
-                                            <form id="comment-form" method="post">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Email</label>
-                                                    <input type="email" class="form-control" id="Email" asp-for="Email" />
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Description</label>
-                                                    <textarea class="form-control" id="CommentDescription" asp-for="CommentDescription" maxlength="200"></textarea>
-                                                </div>
-
-                                                <div class="">
-                                                    <button type="submit" class="btn btn-dark">Submit</button>
-                                                    <input type="hidden" id="Id" asp-for="Id" />
-                                                    <input type="hidden" id="UrlHandle" asp-for="UrlHandle" />
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="card-body">
-                                            <div id="${formData.Id}-display">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`);
+                        let count = 0;
+                        $(`#${formData.Id}-display`).children().remove();
                         for (var comment of data) {
-                            $(`#${formData.Id}-display`).append(`
+                            count += 1;
+                            $(`#${comment.id}-display`).append(`
                                                      <div class="card mb-3">
                                                         <div class="card-body">
                                                             <div>${comment.description}</div>
@@ -186,6 +265,7 @@
                                                     </div>
                                         `);
                         }
+                        $(`#Total-Comments-${formData.Id}`).text(`Comments: ${count}`);
                     },
                     error: function () {
                         // Handle any errors
