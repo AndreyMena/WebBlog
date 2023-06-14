@@ -94,10 +94,12 @@
                         </div>
                     </div>
                 }
+            }else{
+                <p class="mb-4">There are no associated blogs</p>
             }
         </div>
         <div class="col-12 col-lg-3">
-            @if (Model != null && Model.BlogPosts.Any())
+            @if (Model != null && (Model.Tags.Any() || Model.Authors.Any()))
             {
                 <h3 class="mb-4">Categories</h3>
                 <ul class="list-group mb-5">
@@ -130,22 +132,16 @@
             {
                 <h3 class="mb-4">Categories</h3>
                 <ul class="list-group">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <li class="list-group-item">
-                            <p class="mb-4">No tags found</p>
-                        </li>
-                    }
+                    <li class="list-group-item">
+                        <p class="mb-4">No tags found</p>
+                    </li>
                 </ul>
 
                 <h3 class="mb-4">Authors</h3>
                 <ul class="list-group">
-                    @foreach (var author in Model.Authors)
-                    {
-                        <li class="list-group-item">
-                            <p class="mb-4">No authors found</p>
-                        </li>
-                    }
+                    <li class="list-group-item">
+                        <p class="mb-4">No authors found</p>
+                    </li>
                 </ul>
             }
         </div>

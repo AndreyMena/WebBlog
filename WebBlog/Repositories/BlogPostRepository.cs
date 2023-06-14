@@ -56,7 +56,7 @@ namespace WebBlog.Repositories
         public async Task<IEnumerable<BlogPost>> GetByAuthor(string email)
         {
             var blogs = await _context.BlogPost.Include(x => x.Tags).ToListAsync();
-            var blogTags = blogs.Where(b => b.Author == email);
+            var blogTags = blogs.Where(b => b.EmailAuthor == email);
             return blogTags;
         }
         
