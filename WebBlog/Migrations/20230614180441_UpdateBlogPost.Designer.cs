@@ -12,8 +12,8 @@ using WebBlog.Data;
 namespace WebBlog.Migrations
 {
     [DbContext(typeof(WebBlogDbContext))]
-    [Migration("20230611022537_Update migration WebBlog")]
-    partial class UpdatemigrationWebBlog
+    [Migration("20230614180441_UpdateBlogPost")]
+    partial class UpdateBlogPost
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,6 +51,9 @@ namespace WebBlog.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EmailAuthor")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Heading")
                         .HasColumnType("nvarchar(max)");
 
@@ -83,6 +86,9 @@ namespace WebBlog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("BlogPostId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
@@ -96,6 +102,8 @@ namespace WebBlog.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BlogPostId");
 
                     b.ToTable("Comment");
                 });
@@ -130,6 +138,18 @@ namespace WebBlog.Migrations
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WebBlog.Models.Domain.Comment", b =>
+                {
+                    b.HasOne("WebBlog.Models.Domain.BlogPost", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("BlogPostId");
+                });
+
+            modelBuilder.Entity("WebBlog.Models.Domain.BlogPost", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
