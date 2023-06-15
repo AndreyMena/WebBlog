@@ -39,7 +39,7 @@
                                     }
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Comments" asp-action="List">See all comments and delete</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Comments" asp-action="Index">See all comments and delete</a></li>
                                     }
                                     @if (User.IsInRole("Admin") || User.IsInRole("Author"))
                                     {
