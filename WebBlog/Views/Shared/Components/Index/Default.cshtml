@@ -47,11 +47,11 @@
                     <form class="comment-form" method="post">
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" id="Email-@blogPost.Id" asp-for="Email" />
+                            <input type="email" class="form-control" id="Email-@blogPost.Id" asp-for="Email" required />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Description</label>
-                            <textarea  oninput="verificar(this, 200, document.getElementById(`countText-@blogPost.Id`));" class="form-control" id="CommentDescription-@blogPost.Id" asp-for="CommentDescription" maxlength="200"></textarea>
+                            <textarea  oninput="verificar(this, 200, document.getElementById(`countText-@blogPost.Id`));" class="form-control" id="CommentDescription-@blogPost.Id" asp-for="CommentDescription" required maxlength="200"> </textarea>
                             Max Length <span id="countText-@blogPost.Id">200</span>
                         </div>
 
