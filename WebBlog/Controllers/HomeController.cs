@@ -33,16 +33,19 @@ namespace WebBlog.Controllers
             roleManager = _roleManager;
         }
 
-        public async Task<IActionResult> Index(string? category, string? email)
+        public async Task<IActionResult> Index(string category, int? indexPage, string? email)
         {
+            ViewData["indexPage"] = indexPage ?? 1;
+            ViewData["category"] = category ?? null;
+            ViewData["email"] = email ?? null;
             var blogPosts = await _postsRepository.GetAllAsync();
+
             if (category != null)
             {
                 blogPosts = await _postsRepository.GetByTag(category);
             }
             if (email != null)
             {
-                //TODO FILTRAR POR email (Author)
                 blogPosts = await _postsRepository.GetByAuthor(email);
             }
 

@@ -1,4 +1,5 @@
 ﻿using WebBlog.Models.Domain;
+using X.PagedList;
 
 namespace WebBlog.Models.ViewModels
 {
@@ -19,5 +20,7 @@ namespace WebBlog.Models.ViewModels
         public IEnumerable<Tag> Tags { get; set; }
 
         public IList<AppUser> Authors { get; set; }
+
+        public IPagedList<BlogDetailsViewModel> BlogDetails { get; set; }
     }
 }
