@@ -4,6 +4,7 @@
 @using X.PagedList.Mvc.Core
 @{
 }
+
 <div id="content">
 
 @foreach (var blogPost in Model.BlogDetails)
@@ -72,6 +73,6 @@
 
     <div id="contentPager">
         Page @(@Model.BlogDetails.PageCount < Model.BlogDetails.PageNumber ? 0 : Model.BlogDetails.PageNumber) of @Model.BlogDetails.PageCount
-        @Html.PagedListPager(Model.BlogDetails, indexPage => Url.Action("Index", new { indexPage }))
+        @Html.PagedListPager(Model.BlogDetails, (indexPage) => Url.Action("Index", new { indexPage, category = ViewData["category"]}))
     </div>
 </div>
