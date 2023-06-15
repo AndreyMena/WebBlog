@@ -25,9 +25,13 @@ namespace WebBlog.Controllers
             _commentRepository = commentRepository;
         }
 
-        public async Task<IActionResult> Index(string? category)
+        public async Task<IActionResult> Index(string category, int? indexPage)
         {
+            ViewData["indexPage"] = indexPage ?? 1;
+            ViewData["category"] = category ?? null;
+
             var blogPosts = await _postsRepository.GetAllAsync();
+
             if (category != null)
             {
                 blogPosts = await _postsRepository.GetByTag(category);

@@ -1,0 +1,77 @@
+﻿﻿
+@model WebBlog.Models.ViewModels.HomeViewModel
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@{
+}
+<div id="content">
+
+@foreach (var blogPost in Model.BlogDetails)
+{
+    <div class="mb-5 bg-light box-shadow p-5" width="100%">
+        <img src="@blogPost.ImageUrl" alt="@blogPost.Heading"
+         class="mb-2 d-block img-fluid" />
+        <h2 class="mb-4">@blogPost.Heading</h2>
+        <p class="mb-4">
+            Author: @blogPost.Author
+            <br />
+            Published Date: @blogPost.PublishedDate.ToShortDateString()
+        </p>
+        <p class="mb-4">
+            @foreach (var tag in blogPost.Tags)
+            {
+                <span class="badge bg-primary me-2">@tag.Name</span>
+            }
+        </p>
+        @if (@blogPost.ShortDescription.Length > 300)
+        {
+            <p class="mb-4">@blogPost.ShortDescription.Substring(0, 300 - 1)... <a class="link" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a></p>
+        }
+        else
+        {
+            <p class="mb-4">@blogPost.ShortDescription</p>
+        }
+
+        <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
+        <form class="number-comments" method="POST">
+            <input type="hidden" id="id-post-@blogPost.Id" value="@blogPost.Id" asp-for="Id">
+            <button class="btn mt-4" type="submit" d-block mt-4" id="Total-Comments-@blogPost.Id">Comments: @blogPost.TotalComments</button>
+        </form>
+
+        <div id="@blogPost.Id">
+            <div class="card" style="display:none;">
+                <div class="card-header">
+                    <h5>Comments</h5>
+
+                    <form class="comment-form" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="Email-@blogPost.Id" asp-for="Email" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="CommentDescription-@blogPost.Id" asp-for="CommentDescription" maxlength="200"></textarea>
+                        </div>
+
+                        <div class="">
+                            <button type="submit" class="btn btn-dark">Submit</button>
+                            <input type="hidden" id="Id-@blogPost.Id" asp-for="CommentId" value="@blogPost.Id" />
+                            <input type="hidden" id="UrlHandle-@blogPost.Id" asp-for="UrlHandle" value="@blogPost.UrlHandle" />
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div id="@blogPost.Id-display">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+    <div id="contentPager">
+        Page @(@Model.BlogDetails.PageCount < Model.BlogDetails.PageNumber ? 0 : Model.BlogDetails.PageNumber) of @Model.BlogDetails.PageCount
+        @Html.PagedListPager(Model.BlogDetails, indexPage => Url.Action("Index", new { indexPage }))
+    </div>
+</div>

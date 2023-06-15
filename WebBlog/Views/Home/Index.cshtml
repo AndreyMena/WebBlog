@@ -15,12 +15,6 @@
                 If you want to read the latest blogs. Join to The Tech Blog.
             </p>
         </div>
-
-  @*      <div class="col-12 col-lg-6">
-            <img src="https://images.pexels.com/photos/3653849/pexels-photo-3653849.jpeg?auto=compress&cs=tinysrgb&w=1600" 
-            alt="Blog banner phto"
-            class="d-block mx-lg-auto img-fluid " width="250"/>
-        </div>*@
     </div>
 </div>
 
@@ -31,69 +25,11 @@
         <div class="col-12 col-lg-9">
             @if (Model != null && Model.BlogPosts.Any())
             {
-                @foreach (var blogPost in Model.BlogPosts)
-                {
-                    <div class="mb-5 bg-light box-shadow p-5" width="100%">
-                        <img src="@blogPost.ImageUrl" alt="@blogPost.Heading" 
-                            class="mb-2 d-block img-fluid"/>
-                        <h2 class="mb-4">@blogPost.Heading</h2>
-                        <p class="mb-4">
-                            Author: @blogPost.Author
-                            <br/>
-                            Published Date: @blogPost.PublishedDate.ToShortDateString()
-                        </p>
-                        <p class="mb-4">
-                            @foreach (var tag in blogPost.Tags)
-                            {
-                                <span class="badge bg-primary me-2">@tag.Name</span>
-                            }
-                        </p>
-                        @if (@blogPost.ShortDescription.Length > 300)
-                        {
-                            @*TODO: Link to read the full posts*@
-                            <p class="mb-4">@blogPost.ShortDescription.Substring(0, 300 - 1)... <a class="link"asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a></p>
-                        }
-                        else
-                        {
-                            <p class="mb-4">@blogPost.ShortDescription</p>
-                        }
-
-                        <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
-                        <form class="number-comments" method="POST">
-                            <input type="hidden" id="id-post-@blogPost.Id" value="@blogPost.Id" asp-for="Id">
-                            <button class="btn mt-4" type="submit" d-block mt-4" id="Total-Comments-@blogPost.Id">Comments: @blogPost.TotalComments</button>
-                        </form>
-                        
-                        <div id="@blogPost.Id">
-                            <div class="card" style="display:none;">
-                                <div class="card-header"  >
-                                    <h5>Comments</h5>
-
-                                    <form class="comment-form" method="post">
-                                        <div class="mb-3">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="Email-@blogPost.Id" asp-for="Email" />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Description</label>
-                                            <textarea class="form-control" id="CommentDescription-@blogPost.Id" asp-for="CommentDescription" maxlength="200"></textarea>
-                                        </div>
-
-                                        <div class="">
-                                            <button type="submit" class="btn btn-dark">Submit</button>
-                                            <input type="hidden" id="Id-@blogPost.Id" asp-for="CommentId" value="@blogPost.Id"/>
-                                            <input type="hidden" id="UrlHandle-@blogPost.Id" asp-for="UrlHandle" value="@blogPost.UrlHandle" />
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="card-body">
-                                    <div id="@blogPost.Id-display">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
+                @await Component.InvokeAsync("Index",
+                    new {
+                    category = ViewData["category"], 
+                    indexPage =  ViewData["indexPage"]}
+                    )
             }
         </div>
         <div class="col-12 col-lg-3">
@@ -155,29 +91,86 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            $('.number-comments').submit(function (event) {
-                event.preventDefault(); // Prevent the form from submitting normally
+        listCommentListener();
+        addCommentListener();
 
-                // Get the form data
-                var formData = {
-                    Id: $(event.target).children(":first-child")[0].value,
-                };
-                // Make the AJAX call
-                $.ajax({
-                    url: '@Url.Action("GetComments", "Home")', // Replace "ControllerName" with the actual name of your controller
-                    type: 'POST',
-                    data: formData,
-                    success: function (data) {
-                        // Handle the successful response
-                        if ($(`#${formData.Id}`).children().css('display') === 'none') 
-                        {
-                            $(`#Total-Comments-${formData.Id}`).children().css('display', 'block');
+        function listCommentListener() {
+            $(document).ready(function () {
+                $('.number-comments').submit(function (event) {
+                    event.preventDefault(); // Prevent the form from submitting normally
 
-                            $(`#${formData.Id}`).children().css('display', 'block');
+                    // Get the form data
+                    var formData = {
+                        Id: $(event.target).children(":first-child")[0].value,
+                    };
+                    console.log(formData.Id);
+                    // Make the AJAX call
+                    $.ajax({
+                        url: '@Url.Action("GetComments", "Home")', // Replace "ControllerName" with the actual name of your controller
+                        type: 'POST',
+                        data: formData,
+                        success: function (data) {
+                            // Handle the successful response
+                            if ($(`#${formData.Id}`).children().css('display') === 'none') {
+                                $(`#Total-Comments-${formData.Id}`).children().css('display', 'block');
+
+                                $(`#${formData.Id}`).children().css('display', 'block');
+                                $(`#${formData.Id}-display`).children().remove();
+                                for (var comment of data) {
+                                    $(`#${formData.Id}-display`).append(`
+                                                                     <div class="card mb-3">
+                                                                        <div class="card-body">
+                                                                            <div>${comment.description}</div>
+                                                                            <div class="d-flex justify-content-between">
+                                                                                <span class="text-secondary">${comment.email}</span>
+                                                                                <span class="text-secondary">${comment.dateAdded}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                        `);
+                                }
+                            } else {
+                                $(`#${formData.Id}`).children().css('display', 'none');
+                            }
+                        },
+                        error: function () {
+                            // Handle any errors
+                            alert('Error occurred while submitting the comment.');
+                        }
+                    });
+                });
+            });
+        }
+
+        function addCommentListener() {
+            $(document).ready(function () {
+                $('.comment-form').submit(function (event) {
+                    event.preventDefault(); // Prevent the form from submitting normally
+                    // Get the form data
+                    console.log($(event.target))
+                    var formData = {
+                        Email: $(event.target)[0][0].value,
+                        CommentDescription: $(event.target)[0][1].value,
+                        Id: $(event.target)[0][3].value,
+                        UrlHandle: $(event.target)[0][4].value
+                    };
+
+                    $(event.target)[0][1].value = "";
+                    console.log(formData);
+                    // Make the AJAX call
+                    $.ajax({
+                        url: '@Url.Action("PostComments", "Home")', // Replace "ControllerName" with the actual name of your controller
+                        type: 'POST',
+                        data: formData,
+                        success: function (data) {
+                            // Handle the successful response
+                            console.log(data);
+
+                            let count = 0;
                             $(`#${formData.Id}-display`).children().remove();
                             for (var comment of data) {
-                                $(`#${formData.Id}-display`).append(`
+                                count += 1;
+                                $(`#${comment.id}-display`).append(`
                                                              <div class="card mb-3">
                                                                 <div class="card-body">
                                                                     <div>${comment.description}</div>
@@ -189,94 +182,35 @@
                                                             </div>
                                                 `);
                             }
-                        } else {
-                            $(`#${formData.Id}`).children().css('display', 'none');
+                            $(`#Total-Comments-${formData.Id}`).text(`Comments: ${count}`);
+                        },
+                        error: function () {
+                            // Handle any errors
+                            alert('Error occurred while submitting the comment.');
                         }
-                        
-                        ////$(`#${formData.Id}`).append(` 
-                        ////          <div class="card">
-                        ////                <div class="card-header">
-                        ////                    <h5>Comments</h5>
-
-                        ////                    <form class="comment-form" method="post">
-                        ////                        <div class="mb-3">
-                        ////                            <label class="form-label">Email</label>
-                        ////                            <input type="email" class="form-control" id="Email" asp-for="Email" />
-                        ////                        </div>
-                        ////                        <div class="mb-3">
-                        ////                            <label class="form-label">Description</label>
-                        ////                            <textarea class="form-control" id="CommentDescription" asp-for="CommentDescription" maxlength="200"></textarea>
-                        ////                        </div>
-
-                        ////                        <div class="">
-                        ////                            <button type="submit" class="btn btn-dark">Submit</button>
-                        ////                            <input type="hidden" id="Id" asp-for="Id" />
-                        ////                            <input type="hidden" id="UrlHandle" asp-for="UrlHandle" />
-                        ////                        </div>
-                        ////                    </form>
-                        ////                </div>
-                        ////                <div class="card-body">
-                        ////                    <div id="${formData.Id}-display">
-
-                        ////                    </div>
-                        ////                </div>
-                        ////            </div>
-                                
-                        //// `);
-                       
-                    },
-                    error: function () {
-                        // Handle any errors
-                        alert('Error occurred while submitting the comment.');
-                    }
+                    });
                 });
             });
-        });
+        }
 
         $(document).ready(function () {
-            $('.comment-form').submit(function (event) {
-                event.preventDefault(); // Prevent the form from submitting normally
-                // Get the form data
-                console.log($(event.target))
-                var formData = {
-                    Email: $(event.target)[0][0].value,
-                    CommentDescription: $(event.target)[0][1].value,
-                    Id: $(event.target)[0][3].value,
-                    UrlHandle: $(event.target)[0][4].value
-                };
-                console.log(formData);
-                // Make the AJAX call
+            $(document).on("click", "#contentPager a[href]", function () {
                 $.ajax({
-                    url: '@Url.Action("PostComments", "Home")', // Replace "ControllerName" with the actual name of your controller
-                    type: 'POST',
-                    data: formData,
-                    success: function (data) {
-                        // Handle the successful response
-                        console.log(data);
+                    url: $(this).attr("href"),
+                    type: 'GET',
+                    cache: false,
+                    success: function (result) {
+                        var wrapper = document.createElement('div');
+                        wrapper.innerHTML = `<div>${result}</div>`;
+                        var div = wrapper.firstChild;
 
-                        let count = 0;
-                        $(`#${formData.Id}-display`).children().remove();
-                        for (var comment of data) {
-                            count += 1;
-                            $(`#${comment.id}-display`).append(`
-                                                     <div class="card mb-3">
-                                                        <div class="card-body">
-                                                            <div>${comment.description}</div>
-                                                            <div class="d-flex justify-content-between">
-                                                                <span class="text-secondary">${comment.email}</span>
-                                                                <span class="text-secondary">${comment.dateAdded}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                        `);
-                        }
-                        $(`#Total-Comments-${formData.Id}`).text(`Comments: ${count}`);
-                    },
-                    error: function () {
-                        // Handle any errors
-                        alert('Error occurred while submitting the comment.');
+                        $('#content').html(div.querySelector('#content').innerHTML);
+
+                        listCommentListener();
+                        addCommentListener();
                     }
                 });
+                return false;
             });
         });
     </script>
