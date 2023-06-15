@@ -6,7 +6,7 @@
 @inject SignInManager<AppUser> singInManager
 @inject UserManager<AppUser> userManager
 
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole("Admin") || User.IsInRole("Author"))
 {
     <div class="bg-secondary bg-opacity-10 py-2">
         <div class="container">

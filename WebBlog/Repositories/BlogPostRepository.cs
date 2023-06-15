@@ -57,7 +57,7 @@ namespace WebBlog.Repositories
         {
             var blogs = await _context.BlogPost.Include(x => x.Tags).ToListAsync();
             var blogTags = blogs.Where(b => b.EmailAuthor == email);
-            return blogTags;
+            return blogTags.ToList();
         }
         
         public async Task<BlogPost> GetByUrlHandleAsync(string urlHandle)

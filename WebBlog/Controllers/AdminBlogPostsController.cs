@@ -73,40 +73,53 @@ namespace WebBlog.Controllers
             blogPost.Tags = selectedTags;
 
             await _postRepository.AddAsync(blogPost);
-            return RedirectToAction("Add");
+            return RedirectToAction("index", "home");
         }
 
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var blogPost = await _postRepository.GetAllAsync();
-            return View(blogPost);
+            if (User.IsInRole("Author")) {
+                var userNamer = User.Identity.Name;
+                var appUser = await userManager.FindByNameAsync(userNamer);
+                var blogPost = await _postRepository.GetByAuthor(appUser.Email);
+                return View(blogPost);
+            }
+            if (User.IsInRole("Admin"))
+            {
+                var blogPost = await _postRepository.GetAllAsync();
+                return View(blogPost);
+            }
+            return View(null);
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
+            var userNamer = User.Identity.Name;
+            var appUser = await userManager.FindByNameAsync(userNamer);
             var blogPost = await _postRepository.GetAsync(id);
-            var tagsDomainModel = await _tagRepository.GetAllAsync();
-
             if (blogPost != null)
             {
-                var model = new EditBlogPostRequest
-                {
-                    Id = blogPost.Id,
-                    Heading = blogPost.Heading,
-                    PageTitle = blogPost.PageTitle,
-                    Content = blogPost.Content,
-                    ShortDescription = blogPost.ShortDescription,
-                    ImageUrl = blogPost.ImageUrl,
-                    UrlHandle = blogPost.UrlHandle,
-                    PublishedDate = blogPost.PublishedDate,
-                    Author = blogPost.Author,
-                    Visible = blogPost.Visible,
-                    Tags = tagsDomainModel.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
-                    SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
-                };
-                return View(model);
+                if (blogPost.EmailAuthor == appUser.Email) {
+                    var tagsDomainModel = await _tagRepository.GetAllAsync();
+                    var model = new EditBlogPostRequest
+                    {
+                        Id = blogPost.Id,
+                        Heading = blogPost.Heading,
+                        PageTitle = blogPost.PageTitle,
+                        Content = blogPost.Content,
+                        ShortDescription = blogPost.ShortDescription,
+                        ImageUrl = blogPost.ImageUrl,
+                        UrlHandle = blogPost.UrlHandle,
+                        PublishedDate = blogPost.PublishedDate,
+                        Author = blogPost.Author,
+                        Visible = blogPost.Visible,
+                        Tags = tagsDomainModel.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                        SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
+                    };
+                    return View(model);
+                }
             }
             return View(null);
         }
