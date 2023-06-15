@@ -37,6 +37,10 @@
                                         <li><a class="dropdown-item" asp-area="" asp-controller="AdminTags" asp-action="Add">Add Tag</a></li>
                                         <li><a class="dropdown-item" asp-area="" asp-controller="AdminTags" asp-action="List">Show all Tags</a></li>
                                     }
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Comments" asp-action="List">See all comments and delete</a></li>
+                                    }
                                     @if (User.IsInRole("Admin") || User.IsInRole("Author"))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-controller="AdminBlogPosts" asp-action="Add">Add Blog Post</a></li>

@@ -78,12 +78,6 @@ namespace WebBlog.Controllers
             
             var tags = await _tagRepository.GetAllAsync();
 
-            /*
-            foreach (var user in userManager.Users) {
-                if (Roles.U) {
-                    userManager.GetUsersInRoleAsync("Author");
-                }
-            }*/
             var authors = await userManager.GetUsersInRoleAsync("Author");
 
             var homeViewModel = new HomeViewModel
@@ -92,8 +86,6 @@ namespace WebBlog.Controllers
                 Tags = tags,
                 Authors = authors
             };
-
-
 
             return View(homeViewModel);
         }
@@ -165,11 +157,6 @@ namespace WebBlog.Controllers
             }
 
             return Json(blogCommentView);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -55,3 +55,10 @@ body {
 .pagination a:hover:not(.active) {
     background-color: #ddd;
 }
+
+.mycomments-table tbody tr td {
+    max-width: 200px; /* Customise it accordingly */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
