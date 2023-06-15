@@ -3,7 +3,8 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+@if (User.IsInRole("Admin"))
+{
 <div class="container">
 
 <h1>List of comments</h1>
@@ -62,3 +63,13 @@
         <p>No comments yet</p>
     }
 </div>
+
+}
+else
+{
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>You do not have permissions to manage comments.</h1>
+    </div>
+</div>
+}
