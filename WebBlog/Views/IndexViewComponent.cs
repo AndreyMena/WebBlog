@@ -20,15 +20,19 @@ namespace WebBlog.Views
             _tagRepository = tagRepository;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string category, int? indexPage)
+        public async Task<IViewComponentResult> InvokeAsync(string category, int? indexPage, string email)
         {
+
             var blogPosts = await _postsRepository.GetAllAsync();
 
             if (category != null)
             {
                 blogPosts = await _postsRepository.GetByTag(category);
             }
-
+            if (email != null)
+            {
+                blogPosts = await _postsRepository.GetByAuthor(email);
+            }
             var blogPostsDetails = new List<BlogDetailsViewModel>();
 
             foreach (var post in blogPosts)
@@ -62,7 +66,7 @@ namespace WebBlog.Views
             {
                 BlogPosts = blogPostsDetails,
                 Tags = tags,
-                BlogDetails = blogPostsDetails.ToPagedList(indexPage ?? 1, 2)
+                BlogDetails = blogPostsDetails.ToPagedList(indexPage ?? 1, 5)
             };
 
             return View(homeViewModel);

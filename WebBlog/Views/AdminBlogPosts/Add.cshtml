@@ -1,6 +1,10 @@
 ﻿@model WebBlog.Models.ViewModels.AddBlogPostRequest;
 @{
 }
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppUser> singInManager
+@inject UserManager<AppUser> userManager
 
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
@@ -79,6 +83,7 @@
         </div>
     </form>
 </div>
+
 
 @section Scripts {
     <script>

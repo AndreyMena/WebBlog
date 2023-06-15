@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebBlog.Models;
 using WebBlog.Models.Domain;
@@ -13,28 +15,38 @@ namespace WebBlog.Controllers
         private readonly ITagRepository _tagRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<AppUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public HomeController(ILogger<HomeController> logger, 
                                 IBlogPostRepository blogPostRepository, 
                                 ITagRepository tagRepository, 
-                                ICommentRepository commentRepository)
+                                ICommentRepository commentRepository,
+                                UserManager<AppUser> _userManager,
+                                RoleManager<IdentityRole> _roleManager)
         {
             _postsRepository = blogPostRepository;
             _logger = logger;
             _tagRepository = tagRepository;
             _commentRepository = commentRepository;
+            userManager = _userManager;
+            roleManager = _roleManager;
         }
 
-        public async Task<IActionResult> Index(string category, int? indexPage)
+        public async Task<IActionResult> Index(string category, int? indexPage, string? email)
         {
             ViewData["indexPage"] = indexPage ?? 1;
             ViewData["category"] = category ?? null;
-
+            ViewData["email"] = email ?? null;
             var blogPosts = await _postsRepository.GetAllAsync();
 
             if (category != null)
             {
                 blogPosts = await _postsRepository.GetByTag(category);
+            }
+            if (email != null)
+            {
+                blogPosts = await _postsRepository.GetByAuthor(email);
             }
 
             var blogPostsDetails = new List<BlogDetailsViewModel>();
@@ -66,11 +78,22 @@ namespace WebBlog.Controllers
             
             var tags = await _tagRepository.GetAllAsync();
 
+            /*
+            foreach (var user in userManager.Users) {
+                if (Roles.U) {
+                    userManager.GetUsersInRoleAsync("Author");
+                }
+            }*/
+            var authors = await userManager.GetUsersInRoleAsync("Author");
+
             var homeViewModel = new HomeViewModel
             {
                 BlogPosts = blogPostsDetails,
                 Tags = tags,
+                Authors = authors
             };
+
+
 
             return View(homeViewModel);
         }

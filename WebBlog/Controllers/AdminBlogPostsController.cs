@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using WebBlog.Models;
 using WebBlog.Models.Domain;
 using WebBlog.Models.ViewModels;
 using WebBlog.Repositories;
@@ -11,11 +13,16 @@ namespace WebBlog.Controllers
     {
         private readonly ITagRepository _tagRepository;
         private readonly IBlogPostRepository _postRepository;
+        private readonly SignInManager<AppUser> signInManager;
+        private readonly UserManager<AppUser> userManager;
 
-        public AdminBlogPostsController(ITagRepository tagRepository, IBlogPostRepository postRepository)
+        public AdminBlogPostsController(ITagRepository tagRepository, IBlogPostRepository postRepository,
+            SignInManager<AppUser> _signInManager, UserManager<AppUser> _userManager)
         {
             _tagRepository = tagRepository;
             _postRepository = postRepository;
+            _signInManager = signInManager;
+            userManager = _userManager;
         }
 
         [HttpGet]
@@ -34,6 +41,8 @@ namespace WebBlog.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddBlogPostRequest addBlogPostRequest)
         {
+            var userNamer = User.Identity.Name;
+            var appUser = await userManager.FindByNameAsync(userNamer);
             var blogPost = new BlogPost
             {
                 Heading = addBlogPostRequest.Heading,
@@ -44,6 +53,7 @@ namespace WebBlog.Controllers
                 UrlHandle = addBlogPostRequest.UrlHandle,
                 PublishedDate = addBlogPostRequest.PublishedDate,
                 Author = addBlogPostRequest.Author,
+                EmailAuthor = appUser.Email,
                 Visible = addBlogPostRequest.Visible,
             };
 

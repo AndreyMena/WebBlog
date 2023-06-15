@@ -19,6 +19,8 @@ namespace WebBlog.Models.ViewModels
 
         public IEnumerable<Tag> Tags { get; set; }
 
+        public IList<AppUser> Authors { get; set; }
+
         public IPagedList<BlogDetailsViewModel> BlogDetails { get; set; }
     }
 }

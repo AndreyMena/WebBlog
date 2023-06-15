@@ -27,13 +27,14 @@
             {
                 @await Component.InvokeAsync("Index",
                     new {
-                    category = ViewData["category"], 
-                    indexPage =  ViewData["indexPage"]}
+                        category = ViewData["category"],
+                        email = ViewData["email"],
+                        indexPage =  ViewData["indexPage"]}
                     )
             }
         </div>
         <div class="col-12 col-lg-3">
-            @if (Model != null && Model.BlogPosts.Any())
+            @if (Model != null && (Model.Tags.Any() || Model.Authors.Any()))
             {
                 <h3 class="mb-4">Categories</h3>
                 <ul class="list-group mb-5">
@@ -42,7 +43,7 @@
                         <li class="list-group-item">
                             <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
                                 @*@tag.Name*@
-                                @Html.ActionLink(tag.Name, "Index", "Home", new {category = tag.Name})
+                                @Html.ActionLink(tag.Name, "Index", "Home", new {category = tag.Name, email = ""})
                             </a>
                         
                         </li>
@@ -51,38 +52,31 @@
 
                 <h3 class="mb-4">Authors</h3>
                 <ul class="list-group">
-                    @*TODO: Añadir Authors*@
-                    @*@foreach (var blogPost in Model.BlogPosts)
+                    @foreach (var author in Model.Authors)
                     {
                         <li class="list-group-item">
                             <a class="" asp-area="" asp-controller="" asp-action="" asp-route-urlHandle="">
-                                Hola
+                                @Html.ActionLink(author.FirstName +" "+ author.LastName, "Index", "Home", new { category = "", email = author.Email})
                             </a>
 
                         </li>
-                    }*@
+                    }
                 </ul>
             }
             else
             {
                 <h3 class="mb-4">Categories</h3>
                 <ul class="list-group">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <li class="list-group-item">
-                            <p class="mb-4">No tags found</p>
-                        </li>
-                    }
+                    <li class="list-group-item">
+                        <p class="mb-4">No tags found</p>
+                    </li>
                 </ul>
 
                 <h3 class="mb-4">Authors</h3>
                 <ul class="list-group">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <li class="list-group-item">
-                            <p class="mb-4">No authors found</p>
-                        </li>
-                    }
+                    <li class="list-group-item">
+                        <p class="mb-4">No authors found</p>
+                    </li>
                 </ul>
             }
         </div>
