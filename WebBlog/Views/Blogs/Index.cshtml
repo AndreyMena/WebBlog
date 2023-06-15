@@ -40,7 +40,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Description</label>
-                                <textarea class="form-control" id="CommentDescription" asp-for="CommentDescription" maxlength="200"></textarea>
+                                <textarea oninput="verificar(this, 200, document.getElementById('countText'));" class="form-control" id="CommentDescription" asp-for="CommentDescription" maxlength="200"></textarea>
+                                Max Length: <span id="countText">200</span>
                             </div>
 
                             <div class="">
@@ -83,6 +84,15 @@
 
 @section Scripts {
         <script>
+            function verificar(control, max, progressText) {
+              // Limit the text area length
+              control.value = control.value.substring(0, max);
+
+              // Set the number of characters left
+              const numberCharLeft = max - control.value.length;
+              progressText.textContent = numberCharLeft.toString();
+            }
+
             $(document).ready(function () {
                 $('#comment-form').submit(function (event) {
                     event.preventDefault(); // Prevent the form from submitting normally

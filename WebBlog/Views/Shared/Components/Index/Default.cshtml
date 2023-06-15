@@ -51,7 +51,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control" id="CommentDescription-@blogPost.Id" asp-for="CommentDescription" maxlength="200"></textarea>
+                            <textarea  oninput="verificar(this, 200, document.getElementById(`countText-@blogPost.Id`));" class="form-control" id="CommentDescription-@blogPost.Id" asp-for="CommentDescription" maxlength="200"></textarea>
+                            Max Length <span id="countText-@blogPost.Id">200</span>
                         </div>
 
                         <div class="">

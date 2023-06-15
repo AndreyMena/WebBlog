@@ -85,6 +85,14 @@
 
 @section Scripts {
     <script>
+         function verificar(control, max, progressText) {
+              // Limit the text area length
+              control.value = control.value.substring(0, max);
+
+              // Set the number of characters left
+              const numberCharLeft = max - control.value.length;
+              progressText.textContent = numberCharLeft.toString();
+            }
         listCommentListener();
         addCommentListener();
 
