@@ -1,0 +1,64 @@
+﻿@model List<WebBlog.Models.ViewModels.CommentListViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+
+<h1>List of comments</h1>
+    @if (Model != null && Model.Any())
+    {
+        <table class="table mycomments-table">
+            <thead>
+                <tr>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Date Added
+                    </th>
+                    <th>
+                        PostId
+                    </th>
+                    <th>
+                        Post Title
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateAdded)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PostId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PostTitle)
+                        </td>
+                        <td>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else 
+    {
+        <p>No comments yet</p>
+    }
+</div>
