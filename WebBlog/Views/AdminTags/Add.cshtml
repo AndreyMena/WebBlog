@@ -2,6 +2,8 @@
 @{
 }
 
+@if (User.IsInRole("Admin"))
+{
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
         <h1>Add New Tag - Only Admin</h1>
@@ -25,3 +27,13 @@
         </div>
     </form>
 </div>
+
+}
+else
+{
+    <div class="bg-secondary bg-opacity-10 py-2">
+        <div class="container">
+            <h1>You do not have permissions to add tags.</h1>
+        </div>
+    </div>
+}

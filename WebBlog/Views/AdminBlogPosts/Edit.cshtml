@@ -2,6 +2,8 @@
 @{
 }
 
+@if (User.IsInRole("Admin") || User.IsInRole("Author"))
+{
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
         <h1>Edit Blog Post - Only Admin</h1>
@@ -97,9 +99,18 @@
     }
     else
     {
-        <p>No Blog Post FOUND</p>
+        <p>You do not have permissions to this blog.</p>
     }
 </div>
+}
+else
+{
+    <div class="bg-secondary bg-opacity-10 py-2">
+        <div class="container">
+            <h1>You do not have permissions to edit blogs.</h1>
+        </div>
+    </div>
+}
 
 @section Scripts {
     <script>

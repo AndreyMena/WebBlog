@@ -12,8 +12,8 @@ using WebBlog.Data;
 namespace WebBlog.Migrations
 {
     [DbContext(typeof(WebBlogDbContext))]
-    [Migration("20230614180441_UpdateBlogPost")]
-    partial class UpdateBlogPost
+    [Migration("20230614045122_UpdateDB")]
+    partial class UpdateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,9 +49,6 @@ namespace WebBlog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmailAuthor")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Heading")
