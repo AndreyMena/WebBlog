@@ -4,6 +4,8 @@ namespace WebBlog.Models.ViewModels
 {
     public class EditViewModel
     {
+        public string Id { get; set; }
+
         [Required]
         public string? FirstName { get; set; }
 

@@ -6,28 +6,30 @@
 
 @if (User.IsInRole("Admin"))
 {
-    <form asp-action="EditUser">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="FirstName"></label>
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="LastName"></label>
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Role"></label>
-            <input asp-for="Role" class="form-control" />
-            <span asp-validation-for="Role" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Submit" class="btn btn-primary" />
-        </div>
-
-    </form>
+    <div class="container py-5">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Role"></label>
+                <input asp-for="Role" class="form-control" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+                <button type="submit" asp-route-id="@Model.Id" class="btn btn-danger"  asp-area="" asp-action="Delete" asp-controller="Admin">Delete</button>
+            </div>
+        </form>
+    </div>
 }
 else
 {

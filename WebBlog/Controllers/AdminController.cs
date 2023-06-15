@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Collections.Generic;
+using System.Web.Helpers;
 using WebBlog.Models;
+using WebBlog.Models.Domain;
 using WebBlog.Models.ViewModels;
 
 namespace WebBlog.Controllers
@@ -48,43 +50,56 @@ namespace WebBlog.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var user = new AppUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
-                var result = await userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded) 
+                var userName = User.Identity.Name;
+                var currentUser = await userManager.FindByNameAsync(userName);
+                if (await userManager.IsInRoleAsync(currentUser, "Admin"))
                 {
-                    return RedirectToAction("index", "home");
-                }
+                    var user = new AppUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
+                    var result = await userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded) 
+                    {
+                        return RedirectToAction("index", "home");
+                    }
 
-                foreach (var error in result.Errors) 
-                {
-                    ModelState.AddModelError("", error.Description);
+                    foreach (var error in result.Errors) 
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
                 }
             }
-
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(AppUser user)
+        public async Task<IActionResult> Delete(string id)
         {
             if (ModelState.IsValid)
             {
-                
-                if (user != null)
-                {
-                    IdentityResult result = await userManager.DeleteAsync(user);
+                var userNamer = User.Identity.Name;
+                var currentUser = await userManager.FindByNameAsync(userNamer);
 
-                    
-                    return View();
+                var deleteUser = await userManager.FindByEmailAsync(id);
+                if (deleteUser != null)
+                {
+                    if (await userManager.IsInRoleAsync(currentUser, "Admin")) {
+                        IdentityResult result = await userManager.DeleteAsync(deleteUser);
+                    }
                 }
             }
-            return View();
+            return RedirectToAction("AdminView", "Admin"); ;
         }
 
         [HttpGet]
         public IActionResult EditUser(string id)
         {
-            return View();
+            var userName = User.Identity.Name;
+            var currentUser = userManager.FindByNameAsync(userName).Result;
+            if (userManager.IsInRoleAsync(currentUser, "Admin").Result) {
+                var model = new EditViewModel();
+                model.Id = id;
+                return View(model);
+            }
+            return View(null);
         }
 
         [HttpPost]
@@ -92,19 +107,24 @@ namespace WebBlog.Controllers
         {
             if (ModelState.IsValid)
             {
-                userManager.FindByEmailAsync(id).Result.FirstName = model.FirstName;
-                userManager.FindByEmailAsync(id).Result.LastName = model.LastName;
-                var result = await userManager.AddToRoleAsync(userManager.FindByEmailAsync(id).Result, model.Role);
-
-                if (result.Succeeded)
+                var userName = User.Identity.Name;
+                var currentUser = await userManager.FindByNameAsync(userName);
+                if (await userManager.IsInRoleAsync(currentUser, "Admin"))
                 {
-                    return RedirectToAction("index", "home");
-                }
+                    userManager.FindByEmailAsync(id).Result.FirstName = model.FirstName;
+                    userManager.FindByEmailAsync(id).Result.LastName = model.LastName;
+                    var result = await userManager.AddToRoleAsync(userManager.FindByEmailAsync(id).Result, model.Role);
 
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("index", "home");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }   
             }
 
             return View();

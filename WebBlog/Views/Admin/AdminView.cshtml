@@ -19,7 +19,6 @@
                     <th>Email</th>
                     <th>Role</th>
                     <th>Editar</th>
-                    <th>Borrar</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,9 +34,6 @@
                         </td>
                         <td>
                             <a class="btn btn-secondary" asp-controller="Admin" asp-action="EditUser" asp-route-id="@item.Item1.Email">Editar</a>
-                        </td>
-                        <td>
-                            <a type="button" class="btn btn-danger" asp-controller="Admin" asp-action="Delete">Borrar</a>
                         </td>
                     </tr>
                 }

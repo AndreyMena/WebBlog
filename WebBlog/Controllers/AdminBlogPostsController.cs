@@ -101,7 +101,7 @@ namespace WebBlog.Controllers
             var blogPost = await _postRepository.GetAsync(id);
             if (blogPost != null)
             {
-                if (blogPost.EmailAuthor == appUser.Email) {
+                if (blogPost.EmailAuthor == appUser.Email || await userManager.IsInRoleAsync(appUser, "Admin")) {
                     var tagsDomainModel = await _tagRepository.GetAllAsync();
                     var model = new EditBlogPostRequest
                     {
