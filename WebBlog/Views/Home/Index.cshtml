@@ -85,7 +85,7 @@
 
 @section Scripts {
     <script>
-         function verificar(control, max, progressText) {
+        function verificar(control, max, progressText) {
             // Limit the text area length
             control.value = control.value.substring(0, max);
 
@@ -100,11 +100,12 @@
             $(document).ready(function () {
                 $('.number-comments').submit(function (event) {
                     event.preventDefault(); // Prevent the form from submitting normally
-
+                    
                     // Get the form data
                     var formData = {
                         Id: $(event.target).children(":first-child")[0].value,
                     };
+                    
                     console.log(formData.Id);
                     // Make the AJAX call
                     $.ajax({
@@ -156,7 +157,7 @@
                         Id: $(event.target)[0][3].value,
                         UrlHandle: $(event.target)[0][4].value
                     };
-
+                    $(`#countText-${formData.Id}`).text('200');
                     $(event.target)[0][1].value = "";
                     console.log(formData);
                     // Make the AJAX call

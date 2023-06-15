@@ -104,7 +104,7 @@
                         Id: $('#Id').val(),
                         UrlHandle: $('#UrlHandle').val()
                     };
-
+                    $(`#countText`).text('200');
                     // Make the AJAX call
                     $.ajax({
                         url: '@Url.Action("GetComments", "Blogs")', // Replace "ControllerName" with the actual name of your controller
